@@ -3,60 +3,745 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meu site - Versão 5 — corrigida</title>
-  <style> 
+  <meta name="description" content="CreditFlow - Dashboard demonstrativo de análise de risco de crédito.">
+  <title>CreditFlow | Inteligência de Crédito</title>
 
-    #COR ALTERADA 
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --sidebar: #111c2e;
+      --primary: #2563eb;
+      --green: #16a34a;
+      --red: #dc2626;
+      --orange: #d97706;
+      --text: #172033;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .layout {
+      display: flex;
       min-height: 100vh;
+    }
+
+    /* MENU LATERAL */
+    .sidebar {
+      width: 245px;
+      flex-shrink: 0;
+      background: var(--sidebar);
+      color: white;
+      padding: 28px 18px;
+    }
+
+    .brand {
+      font-size: 23px;
+      font-weight: bold;
+      margin: 0 0 8px;
+    }
+
+    .brand span {
+      color: #60a5fa;
+    }
+
+    .brand-description {
+      color: #94a3b8;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      margin-bottom: 38px;
+    }
+
+    .menu-title {
+      color: #64748b;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      margin: 25px 10px 12px;
+    }
+
+    .menu a {
+      display: block;
+      color: #cbd5e1;
+      text-decoration: none;
+      padding: 13px 12px;
+      margin-bottom: 6px;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: #233c61;
+      color: white;
+    }
+
+    .menu a.active {
+      border-left: 3px solid #60a5fa;
+    }
+
+    .sidebar-note {
+      margin-top: 45px;
+      padding: 15px;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      color: #cbd5e1;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    /* CONTEÚDO PRINCIPAL */
+    .main {
+      flex: 1;
+      min-width: 0;
+      padding: 30px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .eyebrow {
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    h1 {
+      font-size: 27px;
+      margin: 8px 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .profile {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .section-title {
+      font-size: 17px;
+      margin: 30px 0 16px;
+    }
+
+    /* INDICADORES */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .metric {
+      background: white;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      box-shadow: 0 3px 12px rgba(15, 23, 42, 0.03);
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .metric-value {
+      font-size: 27px;
+      font-weight: bold;
+      margin: 15px 0 10px;
+    }
+
+    .metric-foot {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .green { color: var(--green); }
+    .blue { color: var(--primary); }
+    .orange { color: var(--orange); }
+    .red { color: var(--red); }
+
+    /* PAINÉIS */
+    .panels {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 18px;
+    }
+
+    .panel {
+      background: white;
+      padding: 23px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      min-width: 0;
+    }
+
+    .panel h3 {
+      font-size: 16px;
+      margin: 0 0 8px;
+    }
+
+    .panel-description {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    /* BARRAS DE RISCO */
+    .risk-row {
+      margin-bottom: 23px;
+    }
+
+    .risk-info {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+      margin-bottom: 9px;
+    }
+
+    .bar {
+      height: 9px;
+      background: #edf2f7;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      border-radius: 20px;
+    }
+
+    .low {
+      width: 62%;
+      background: #16a34a;
+    }
+
+    .medium {
+      width: 27%;
+      background: #f59e0b;
+    }
+
+    .high {
+      width: 11%;
+      background: #dc2626;
+    }
+
+    .notice {
+      margin-top: 20px;
+      background: #eff6ff;
+      color: #1e40af;
+      border-radius: 9px;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    /* MONITORAMENTO */
+    .status-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .status-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .status-list li:last-child {
+      border-bottom: none;
+    }
+
+    .status-icon {
+      width: 34px;
+      height: 34px;
       display: grid;
       place-items: center;
-      font-family: system-ui, "Segoe UI", Roboto, sans-serif;
-      background: #1e9e5a;
-      padding: 1rem;
+      background: #eff6ff;
+      border-radius: 9px;
+      flex-shrink: 0;
     }
-    .cartao {
-      background: #fff;
-      border-radius: 20px;
-      padding: 2.5rem;
-      max-width: 520px;
+
+    .status-text strong {
+      font-size: 13px;
+    }
+
+    .status-text p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 5px 0 0;
+    }
+
+    /* TABELA DE SOLICITAÇÕES */
+    .table-wrap {
+      overflow-x: auto;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+    }
+
+    table {
       width: 100%;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, .25);
-      text-align: center;
-      color: #1d1d1f;
-    }
-    .emoji { font-size: 4rem; }
-    h1 { margin: .5rem 0; color: #1e9e5a; }
-    .versao {
-      margin-top: 1.5rem;
-      padding: 1rem;
-      border-radius: 12px;
-      background: #f2f2f7;
+      border-collapse: collapse;
       text-align: left;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      padding: 17px 19px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    th {
+      background: #f8fafc;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 6px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .tag-low {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .tag-medium {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .tag-high {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* RODAPÉ E PUBLICAÇÃO */
+    .footer {
+      margin-top: 28px;
+      background: #111c2e;
+      color: #cbd5e1;
+      padding: 23px;
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 2;
+      overflow-wrap: anywhere;
+    }
+
+    .footer strong {
+      color: white;
+    }
+
+    .footer-title {
+      font-size: 15px;
+      margin-bottom: 8px;
+      color: white;
+    }
+
+    code {
+      background: #26364d;
+      color: #bfdbfe;
+      padding: 3px 6px;
+      border-radius: 5px;
+    }
+
+    .disclaimer {
+      color: #94a3b8;
+      margin-top: 12px;
+      font-size: 11px;
       line-height: 1.8;
     }
-    code { background: #e5e5ea; padding: 2px 6px; border-radius: 6px; }
-    footer { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e5e5ea; color: #6e6e73; font-size: .85rem; }
+
+    /* ADAPTAÇÃO PARA TELAS MENORES */
+    @media (max-width: 1050px) {
+      .sidebar {
+        width: 200px;
+      }
+
+      .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .panels {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .layout {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: 20px;
+      }
+
+      .brand-description {
+        margin-bottom: 15px;
+      }
+
+      .menu-title,
+      .sidebar-note {
+        display: none;
+      }
+
+      .menu {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+
+      .menu a {
+        margin: 0;
+        padding: 10px;
+        font-size: 12px;
+      }
+
+      .main {
+        padding: 20px 14px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .metrics {
+        gap: 10px;
+      }
+
+      .metric {
+        padding: 15px;
+      }
+
+      .metric-value {
+        font-size: 22px;
+      }
+
+      .panel {
+        padding: 17px;
+      }
+
+      .profile {
+        white-space: normal;
+      }
+    }
   </style>
 </head>
+
 <body>
-  <main class="cartao">
-    <div class="emoji">✅</div>
-    <h1>Versão 5 — corrigida</h1>
-    <p>O erro foi corrigido e o robô publicou de novo.</p>
+  <div class="layout">
 
-    <div class="versao">
-      🤖 <strong>Publicado pelo robô em:</strong> __DATA__<br>
-      🔖 <strong>Commit:</strong> <code>__COMMIT__</code><br>
-      👤 <strong>Enviado por:</strong> __AUTOR__
-    </div>
+    <aside class="sidebar">
+      <div class="brand">Credit<span>Flow</span></div>
 
-    <footer>
-      🎓 UNINOVE · Automação de Processos · DevOps<br>
-      Prof. Marcelino Dias da Silva
-    </footer>
-  </main>
+      <div class="brand-description">
+        INTELIGÊNCIA DE CRÉDITO
+      </div>
+
+      <nav class="menu" aria-label="Menu principal">
+        <div class="menu-title">MENU PRINCIPAL</div>
+        <a class="active" href="#dashboard">▦ Dashboard</a>
+        <a href="#solicitacoes">▤ Solicitações</a>
+        <a href="#risco">◈ Análise de risco</a>
+        <a href="#publicacao">⚙ Publicação</a>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>Ambiente acadêmico</strong><br>
+        Protótipo demonstrativo de uma plataforma de análise de crédito.
+      </div>
+    </aside>
+
+    <main class="main" id="dashboard">
+
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">Visão geral / 2026</div>
+          <h1>Dashboard de Crédito</h1>
+          <div class="subtitle">
+            Acompanhe indicadores e visualize a distribuição
+            de risco da carteira.
+          </div>
+        </div>
+
+        <div class="profile">
+          ◉ &nbsp; Ambiente de demonstração
+        </div>
+      </header>
+
+      <section class="metrics" aria-label="Indicadores financeiros">
+
+        <article class="metric">
+          <div class="metric-label">Solicitações analisadas</div>
+          <div class="metric-value">1.284</div>
+          <div class="metric-foot">
+            Volume demonstrativo de propostas
+          </div>
+        </article>
+
+        <article class="metric">
+          <div class="metric-label">Créditos aprovados</div>
+          <div class="metric-value green">842</div>
+          <div class="metric-foot">
+            65,6% das solicitações
+          </div>
+        </article>
+
+        <article class="metric">
+          <div class="metric-label">Em análise</div>
+          <div class="metric-value blue">196</div>
+          <div class="metric-foot">
+            Propostas aguardando avaliação
+          </div>
+        </article>
+
+        <article class="metric">
+          <div class="metric-label">Risco elevado</div>
+          <div class="metric-value red">11%</div>
+          <div class="metric-foot">
+            Participação no conjunto fictício
+          </div>
+        </article>
+
+      </section>
+
+      <h2 class="section-title" id="risco">
+        Análise e monitoramento
+      </h2>
+
+      <section class="panels">
+
+        <article class="panel">
+          <h3>Distribuição por nível de risco</h3>
+
+          <div class="panel-description">
+            Distribuição ilustrativa das solicitações analisadas.
+          </div>
+
+          <div class="risk-row">
+            <div class="risk-info">
+              <span>Risco baixo</span>
+              <strong class="green">62%</strong>
+            </div>
+            <div class="bar">
+              <div class="fill low"></div>
+            </div>
+          </div>
+
+          <div class="risk-row">
+            <div class="risk-info">
+              <span>Risco médio</span>
+              <strong class="orange">27%</strong>
+            </div>
+            <div class="bar">
+              <div class="fill medium"></div>
+            </div>
+          </div>
+
+          <div class="risk-row">
+            <div class="risk-info">
+              <span>Risco alto</span>
+              <strong class="red">11%</strong>
+            </div>
+            <div class="bar">
+              <div class="fill high"></div>
+            </div>
+          </div>
+
+          <div class="notice">
+            <strong>Importante:</strong> estes percentuais são
+            fictícios e servem apenas para demonstrar a interface.
+            Não representam previsões reais de inadimplência.
+          </div>
+        </article>
+
+        <article class="panel">
+          <h3>Monitoramento do sistema</h3>
+
+          <div class="panel-description">
+            Visão demonstrativa das etapas operacionais.
+          </div>
+
+          <ul class="status-list">
+            <li>
+              <div class="status-icon">✓</div>
+              <div class="status-text">
+                <strong>Interface do dashboard</strong>
+                <p>Estrutura visual definida em HTML e CSS.</p>
+              </div>
+            </li>
+
+            <li>
+              <div class="status-icon">↻</div>
+              <div class="status-text">
+                <strong>Integração com repositório</strong>
+                <p>Alterações versionadas pelo GitHub.</p>
+              </div>
+            </li>
+
+            <li>
+              <div class="status-icon">⚙</div>
+              <div class="status-text">
+                <strong>Pipeline de publicação</strong>
+                <p>
+                  O fluxo de deploy depende da configuração
+                  real do projeto.
+                </p>
+              </div>
+            </li>
+
+            <li>
+              <div class="status-icon">☁</div>
+              <div class="status-text">
+                <strong>Hospedagem Cloudflare</strong>
+                <p>
+                  Consulte o resultado do último deploy
+                  na plataforma.
+                </p>
+              </div>
+            </li>
+          </ul>
+        </article>
+
+      </section>
+
+      <h2 class="section-title" id="solicitacoes">
+        Solicitações de crédito
+      </h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Cliente fictício</th>
+              <th>Valor solicitado</th>
+              <th>Renda mensal</th>
+              <th>Nível de risco</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>CR-1001</td>
+              <td>Cliente A</td>
+              <td>R$ 5.000,00</td>
+              <td>R$ 4.500,00</td>
+              <td><span class="tag tag-low">Baixo</span></td>
+              <td>Aprovado</td>
+            </tr>
+
+            <tr>
+              <td>CR-1002</td>
+              <td>Cliente B</td>
+              <td>R$ 18.000,00</td>
+              <td>R$ 3.200,00</td>
+              <td><span class="tag tag-high">Alto</span></td>
+              <td>Em análise</td>
+            </tr>
+
+            <tr>
+              <td>CR-1003</td>
+              <td>Cliente C</td>
+              <td>R$ 8.500,00</td>
+              <td>R$ 6.000,00</td>
+              <td><span class="tag tag-low">Baixo</span></td>
+              <td>Aprovado</td>
+            </tr>
+
+            <tr>
+              <td>CR-1004</td>
+              <td>Cliente D</td>
+              <td>R$ 12.000,00</td>
+              <td>R$ 4.000,00</td>
+              <td><span class="tag tag-medium">Médio</span></td>
+              <td>Em análise</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <footer class="footer" id="publicacao">
+        <div class="footer-title">
+          CreditFlow · Controle de publicação
+        </div>
+
+        <strong>Publicado pelo robô em:</strong> __DATA__<br>
+        <strong>Commit:</strong> <code>__COMMIT__</code><br>
+        <strong>Enviado por:</strong> __AUTOR__
+
+        <div class="disclaimer">
+          UNINOVE · Automação de Processos · DevOps<br>
+          Projeto acadêmico demonstrativo. Dados fictícios,
+          sem conexão com sistemas financeiros reais.
+        </div>
+      </footer>
+
+    </main>
+  </div>
 </body>
-</html> 
-
+</html>
